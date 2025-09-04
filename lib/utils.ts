@@ -9,13 +9,17 @@ export function formatMMSS(totalMs: number): string {
 
 import { useEffect, useReducer, useState } from "react";
 
-export function useNowTick(enabled: boolean, stepMs: number = 250) {
-  const [, force] = useReducer((x) => x + 1, 0);
+export function useNowTick(enabled: boolean, stepMs: number = 250): number {
+  // Return a numeric tick that increments on the given interval. Components
+  // can include the returned tick in dependency arrays so values derived
+  // from Date.now() are recomputed on each tick.
+  const [tick, force] = useReducer((x: number) => x + 1, 0);
   useEffect(() => {
     if (!enabled) return;
     const id = setInterval(force, stepMs);
     return () => clearInterval(id);
   }, [enabled, stepMs]);
+  return tick;
 }
 
 export function useLocalStorage<T>(

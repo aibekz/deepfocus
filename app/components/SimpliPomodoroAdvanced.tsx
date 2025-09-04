@@ -38,15 +38,17 @@ export function SimpliPomodoroAdvanced({
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-  // Only tick while running and after we've mounted (client-side).
-  useNowTick(store.isRunning && mounted, 250);
+  // Only tick while running and after we've mounted (client-side). The
+  // returned `tick` forces re-evaluation of Date.now()-based calculations
+  // (see `effectiveRemaining` below).
+  const tick = useNowTick(store.isRunning && mounted, 250);
 
   const effectiveRemaining = React.useMemo(() => {
     if (store.isRunning && store.targetAt && mounted) {
       return Math.max(0, store.targetAt - Date.now());
     }
     return store.remainingMs;
-  }, [store.isRunning, store.targetAt, store.remainingMs, mounted]);
+  }, [store.isRunning, store.targetAt, store.remainingMs, mounted, tick]);
 
   const [ringing, setRinging] = React.useState(false);
   const ringStopRef = React.useRef<(() => void) | null>(null);
