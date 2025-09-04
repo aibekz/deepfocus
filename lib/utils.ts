@@ -22,21 +22,27 @@ export function useLocalStorage<T>(
   key: string,
   initial: T,
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [state, setState] = useState<T>(() => {
-    try {
-      const raw =
-        typeof window !== "undefined" ? window.localStorage.getItem(key) : null;
-      return raw ? JSON.parse(raw) : initial;
-    } catch {
-      return initial;
-    }
-  });
+  // Start with the provided initial value for a deterministic server render.
+  // Read persisted value from localStorage only after mount to avoid
+  // SSR/client hydration mismatches.
+  const [state, setState] = useState<T>(initial);
+
+  // On mount, load any saved value and replace the initial state.
   useEffect(() => {
     try {
-      if (typeof window !== "undefined")
-        window.localStorage.setItem(key, JSON.stringify(state));
+      const raw = window.localStorage.getItem(key);
+      if (raw) setState(JSON.parse(raw));
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  // Persist state changes to localStorage.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(state));
     } catch {}
   }, [key, state]);
+
   return [state, setState];
 }
 

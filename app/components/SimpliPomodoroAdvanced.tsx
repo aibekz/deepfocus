@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import type {
   PomodoroMode,
@@ -31,13 +32,21 @@ export function SimpliPomodoroAdvanced({
     [focusMinutes, shortMinutes, longMinutes],
   );
 
-  useNowTick(store.isRunning, 250);
+  // Track whether we've mounted so the initial server render is deterministic
+  // (no Date.now() calls during render). Live time (using Date.now) is only
+  // computed after mount which prevents hydration mismatches.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
-  const now = Date.now();
-  const effectiveRemaining =
-    store.isRunning && store.targetAt
-      ? Math.max(0, store.targetAt - now)
-      : store.remainingMs;
+  // Only tick while running and after we've mounted (client-side).
+  useNowTick(store.isRunning && mounted, 250);
+
+  const effectiveRemaining = React.useMemo(() => {
+    if (store.isRunning && store.targetAt && mounted) {
+      return Math.max(0, store.targetAt - Date.now());
+    }
+    return store.remainingMs;
+  }, [store.isRunning, store.targetAt, store.remainingMs, mounted]);
 
   const [ringing, setRinging] = React.useState(false);
   const ringStopRef = React.useRef<(() => void) | null>(null);
@@ -244,6 +253,17 @@ export function SimpliPomodoroAdvanced({
           >
             Reset
           </button>
+        </div>
+        <div className="mt-6 text-center text-sm text-neutral-400">
+          © 2025 Brought to you by{' '}
+          <a
+            href="https://simpliprompt.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/90 hover:underline"
+          >
+            Simpli Prompt
+          </a>
         </div>
       </div>
     </div>
