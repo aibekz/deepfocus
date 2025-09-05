@@ -151,6 +151,7 @@ export function SimpliPomodoroAdvanced({
           <h2 className="text-3xl font-semibold tracking-tight">
             Simpli Pomodoro
           </h2>
+          
         </div>
 
         <div className="flex items-center justify-center">
