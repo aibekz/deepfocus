@@ -126,7 +126,7 @@ export function SimpliPomodoroAdvanced({
         : store.mode === "short"
           ? "Short Break"
           : "Long Break";
-    document.title = `${formatMMSS(effectiveRemaining)} — ${label} · Simpli Pomodoro`;
+    document.title = `${formatMMSS(effectiveRemaining)} — ${label} · Simpli Focus`;
   }, [store.mode, effectiveRemaining]);
 
   const dur = modeDurationMs[store.mode];
@@ -149,7 +149,7 @@ export function SimpliPomodoroAdvanced({
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-semibold tracking-tight">
-            Simpli Pomodoro
+            Simpli Focus
           </h2>
           
         </div>

@@ -4,9 +4,9 @@ import { ibmPlexMono, lora } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Simpli Pomodoro - A Simple Pomodoro Timer",
+  title: "Simpli Focus - A Simple Pomodoro Timer",
   description:
-    "Simpli Pomodoro is a lightweight and user-friendly Pomodoro timer application designed to enhance your productivity.",
+    "Simpli Focus is a lightweight and user-friendly Pomodoro timer application designed to enhance your productivity.",
   icons: {
     icon: "/favicon.svg",
   },
