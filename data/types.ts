@@ -12,7 +12,7 @@ export interface PomodoroStore {
   history: Record<string, PomodoroHistory>;
 }
 
-export interface SimpliPomodoroAdvancedProps {
+export interface DeepFocusProps {
   focusMinutes?: number;
   shortMinutes?: number;
   longMinutes?: number;

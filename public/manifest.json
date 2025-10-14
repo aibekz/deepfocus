@@ -1,0 +1,22 @@
+{
+  "name": "DeepFocus - Pomodoro Timer",
+  "short_name": "DeepFocus",
+  "description": "DeepFocus is a modern Pomodoro timer from Nvixio. Boost your productivity with focused work sessions and strategic breaks.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#e5e5e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity"],
+  "lang": "en",
+  "scope": "/",
+  "id": "deepfocus"
+}

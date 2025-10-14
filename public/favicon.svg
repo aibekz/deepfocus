@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="SP favicon">
-   <rect width="100%" height="100%" fill="transparent"/>
-   <text x="50%" y="50%" fill="#00AA00" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-weight="700" font-size="36" text-anchor="middle" dominant-baseline="central">SP</text>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#000"/>
+  <text x="256" y="352" font-family="IBM Plex Mono, monospace" font-size="320" font-weight="bold" text-anchor="middle" fill="#39FF14">N</text>
 </svg>

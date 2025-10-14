@@ -1,28 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #e5e7eb;
+  --bg-dark: #0f0f0f;
+  --bg-card: #1a1a1a;
+  --fg-light: #e5e5e5;
+  --fg-muted: #a3a3a3;
+  --fg-accent: #ffffff;
+  --border: #404040;
+  --border-light: #525252;
+  --matrix-green: #39ff14;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-lora-sans);
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-card: var(--bg-card);
+  --color-fg-light: var(--fg-light);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-accent: var(--fg-accent);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+  --color-matrix-green: var(--matrix-green);
+  --font-sans: var(--font-ibm-plex-sans);
   --font-mono: var(--font-ibm-plex-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #222222;
-  }
+body {
+  background: var(--bg-dark);
+  color: var(--fg-light);
+  font-family: var(--font-ibm-plex-sans), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-mono);
+/* Custom animations */
+.pomodoro-transition {
+  transition: all 0.2s ease-out;
+}
+
+/* Prevent layout shifts */
+[data-pomodoro-timer] {
+  min-height: 4rem;
+  contain: layout;
 }

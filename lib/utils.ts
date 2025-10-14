@@ -9,10 +9,11 @@ export function formatMMSS(totalMs: number): string {
 
 import { useEffect, useReducer, useState } from "react";
 
-export function useNowTick(enabled: boolean, stepMs: number = 250): number {
+export function useNowTick(enabled: boolean, stepMs: number = 100): number {
   // Return a numeric tick that increments on the given interval. Components
   // can include the returned tick in dependency arrays so values derived
   // from Date.now() are recomputed on each tick.
+  // Reduced stepMs from 250ms to 100ms for better accuracy
   const [tick, force] = useReducer((x: number) => x + 1, 0);
   useEffect(() => {
     if (!enabled) return;
@@ -50,18 +51,114 @@ export function useLocalStorage<T>(
   return [state, setState];
 }
 
-export function beep(): () => void {
-  let audio: HTMLAudioElement | null = null;
+export function beep(
+  timerType: "focus" | "short" | "long" = "focus",
+): () => void {
+  let audioContext: AudioContext | null = null;
+
   try {
-    audio = new window.Audio("/school-bell-199584.mp3");
-    audio.loop = true;
-    audio.play();
-  } catch {}
-  return () => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-      audio = null;
-    }
-  };
+    // Simple, quick beep configuration
+    const getSoundConfig = (timerType: "focus" | "short" | "long") => {
+      switch (timerType) {
+        case "focus":
+          return { frequency: 600, volume: 0.1, beepCount: 5, interval: 200 };
+        case "short":
+          return { frequency: 500, volume: 0.08, beepCount: 1, interval: 0 };
+        case "long":
+          return { frequency: 400, volume: 0.06, beepCount: 3, interval: 300 };
+        default:
+          return { frequency: 500, volume: 0.08, beepCount: 1, interval: 0 };
+      }
+    };
+
+    const playBeep = (frequency: number, volume: number) => {
+      try {
+        if (!audioContext) {
+          audioContext = new (
+            window.AudioContext ||
+            (window as { webkitAudioContext: typeof AudioContext })
+              .webkitAudioContext
+          )();
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.setValueAtTime(
+          frequency,
+          audioContext.currentTime,
+        );
+        oscillator.type = "sine";
+
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(
+          volume,
+          audioContext.currentTime + 0.01,
+        );
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioContext.currentTime + 0.2, // Shorter beep duration
+        );
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+      } catch (error) {
+        console.warn("Failed to play beep:", error);
+      }
+    };
+
+    const showVisualNotification = () => {
+      // Browser notification
+      if (Notification.permission === "granted") {
+        new Notification("Timer Complete!", {
+          body: "Your Pomodoro session has finished.",
+          icon: "/favicon.svg",
+          tag: "pomodoro-timer",
+        });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            new Notification("Timer Complete!", {
+              body: "Your Pomodoro session has finished.",
+              icon: "/favicon.svg",
+              tag: "pomodoro-timer",
+            });
+          }
+        });
+      }
+    };
+
+    const config = getSoundConfig(timerType);
+
+    // Play limited number of quick beeps
+    const playBeepSequence = () => {
+      for (let i = 0; i < config.beepCount; i++) {
+        setTimeout(() => {
+          playBeep(config.frequency, config.volume);
+        }, i * config.interval);
+      }
+    };
+
+    // Start immediately
+    playBeepSequence();
+    showVisualNotification();
+
+    // Return cleanup function
+    return () => {
+      if (audioContext) {
+        try {
+          audioContext.close();
+        } catch (error) {
+          console.warn("Failed to cleanup audio context:", error);
+        }
+        audioContext = null;
+      }
+    };
+  } catch (error) {
+    console.warn("Failed to create digital beep:", error);
+    return () => {};
+  }
 }

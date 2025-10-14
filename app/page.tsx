@@ -1,6 +1,6 @@
 "use client";
-import { SimpliPomodoroAdvanced } from "./components/SimpliPomodoroAdvanced";
+import { DeepFocus } from "./components/DeepFocus";
 
 export default function Page() {
-  return <SimpliPomodoroAdvanced />;
+  return <DeepFocus />;
 }
