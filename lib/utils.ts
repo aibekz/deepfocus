@@ -74,11 +74,13 @@ export function beep(
     const playBeep = (frequency: number, volume: number) => {
       try {
         if (!audioContext) {
-          audioContext = new (
-            window.AudioContext ||
-            (window as { webkitAudioContext: typeof AudioContext })
-              .webkitAudioContext
-          )();
+          const w = window as unknown as {
+            AudioContext?: typeof AudioContext;
+            webkitAudioContext?: typeof AudioContext;
+          };
+          const Ctor = w.AudioContext ?? w.webkitAudioContext;
+          if (!Ctor) throw new Error("Web Audio API is not supported");
+          audioContext = new Ctor();
         }
 
         const oscillator = audioContext.createOscillator();
