@@ -99,9 +99,9 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
           />
           
           {/* Modal Content */}
-          <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl shadow-2xl">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
+          <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl shadow-2xl flex flex-col">
+            {/* Modal Header - Fixed */}
+            <div className="flex items-center justify-between p-6 border-b border-[var(--border)] flex-shrink-0">
               <h2 className="text-xl font-semibold text-[var(--fg-accent)]">
                 DeepFocus v1.0.0
               </h2>
@@ -127,17 +127,15 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
               </button>
             </div>
 
-            {/* Modal Body */}
-            <div className="p-6 space-y-6">
+            {/* Modal Body - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* App Info */}
               <div>
                 <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
                   What is DeepFocus?
                 </h3>
                 <p className="text-sm text-[var(--fg-muted)] leading-relaxed">
-                  A modern Pomodoro timer designed to boost your productivity with 
-                  focused work sessions and strategic breaks. Built with simplicity 
-                  and effectiveness in mind.
+                  DeepFocus is a minimalist Pomodoro timer built to help you boost your productivity with focused work sessions and strategic breaks without distractions, clutter, or noise.
                 </p>
               </div>
 
@@ -228,30 +226,6 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
                 </div>
               </div>
 
-              {/* Privacy & Free */}
-              <div>
-                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
-                  Privacy & Free Forever
-                </h3>
-                <div className="text-sm text-[var(--fg-muted)] space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
-                    <span>Free forever - no subscription, no payment required</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
-                    <span>No signup or account creation needed</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
-                    <span>No data gathering or personal information collection</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
-                    <span>No selling of personal data - your privacy is protected</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Nvixio Branding */}
               <div className="border-t border-[var(--border)] pt-4">
