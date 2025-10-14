@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,25 +7,24 @@ interface LayoutProps {
 
 export default function Layout({ children, progress = 0 }: LayoutProps) {
   const [showInfo, setShowInfo] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Close modal with ESC key
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
         setShowInfo(false);
       }
     }
 
     if (showInfo) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset";
     };
   }, [showInfo]);
   return (
@@ -41,115 +40,27 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
           </div>
 
           {/* Info Icon */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              type="button"
-              onClick={() => setShowInfo(!showInfo)}
-              className="p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] text-[var(--fg-muted)] hover:text-[var(--fg-light)] hover:bg-[var(--border)] transition-all"
-              aria-label="App Information"
+          <button
+            type="button"
+            onClick={() => setShowInfo(true)}
+            className="p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] text-[var(--fg-muted)] hover:text-[var(--fg-light)] hover:bg-[var(--border)] transition-all"
+            aria-label="App Information"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <title>Information</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </button>
-
-            {/* Info Dropdown */}
-            {showInfo && (
-              <div className="absolute right-0 top-full mt-2 w-96 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg shadow-lg z-50">
-                <div className="p-4 space-y-4">
-                  {/* App Info */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[var(--fg-accent)] mb-2">
-                      About DeepFocus
-                    </h3>
-                    <p className="text-xs text-[var(--fg-muted)] leading-relaxed">
-                      A modern Pomodoro timer designed to boost your
-                      productivity with focused work sessions and strategic
-                      breaks.
-                    </p>
-                  </div>
-
-                  {/* Pomodoro Technique */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[var(--fg-accent)] mb-2">
-                      The Pomodoro Technique
-                    </h3>
-                    <div className="text-xs text-[var(--fg-muted)] space-y-2">
-                      <p>
-                        <strong>1. Focus Session:</strong> Work for 25 minutes
-                        with complete focus
-                      </p>
-                      <p>
-                        <strong>2. Short Break:</strong> Take a 5-minute break
-                        to recharge
-                      </p>
-                      <p>
-                        <strong>3. Long Break:</strong> After 4 sessions, take a
-                        15-30 minute break
-                      </p>
-                      <p>
-                        <strong>4. Repeat:</strong> Continue the cycle
-                        throughout your workday
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Benefits */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[var(--fg-accent)] mb-2">
-                      Benefits
-                    </h3>
-                    <ul className="text-xs text-[var(--fg-muted)] space-y-1">
-                      <li>• Improved focus and concentration</li>
-                      <li>• Better time management</li>
-                      <li>• Reduced mental fatigue</li>
-                      <li>• Increased productivity</li>
-                    </ul>
-                  </div>
-
-                  {/* Sound notifications */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[var(--fg-accent)] mb-2">
-                      Sound notifications
-                    </h3>
-                    <ul className="text-xs text-[var(--fg-muted)] space-y-1">
-                      <li>• Gentle sine-wave beeps, short and pleasant</li>
-                      <li>• Focus complete: 5 quick beeps</li>
-                      <li>• Short break complete: 1 beep</li>
-                      <li>• Long break complete: 3 quick beeps</li>
-                      <li>• Auto-stops; no endless ringing</li>
-                    </ul>
-                  </div>
-
-                  {/* Nvixio Branding */}
-                  <div className="border-t border-[var(--border)] pt-3">
-                    <p className="text-xs text-[var(--fg-muted)]">
-                      Brought to you by{" "}
-                      <a
-                        href="https://nvixio.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[var(--fg-light)] hover:text-[var(--fg-accent)] transition-colors"
-                      >
-                        Nvixio
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+              <title>Information</title>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </button>
         </div>
         {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--bg-card)]">
@@ -177,6 +88,189 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
           </a>
         </div>
       </footer>
+
+      {/* Full-Page Modal */}
+      {showInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowInfo(false)}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
+              <h2 className="text-xl font-semibold text-[var(--fg-accent)]">
+                DeepFocus v1.0.0
+              </h2>
+              <button
+                type="button"
+                onClick={() => setShowInfo(false)}
+                className="p-2 rounded-lg text-[var(--fg-muted)] hover:text-[var(--fg-light)] hover:bg-[var(--border)] transition-all"
+                aria-label="Close modal"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* App Info */}
+              <div>
+                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
+                  What is DeepFocus?
+                </h3>
+                <p className="text-sm text-[var(--fg-muted)] leading-relaxed">
+                  A modern Pomodoro timer designed to boost your productivity with 
+                  focused work sessions and strategic breaks. Built with simplicity 
+                  and effectiveness in mind.
+                </p>
+              </div>
+
+              {/* Pomodoro Technique */}
+              <div>
+                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
+                  The Pomodoro Technique
+                </h3>
+                <div className="text-sm text-[var(--fg-muted)] space-y-3">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                    <div>
+                      <strong>Focus Session:</strong> Work for 25 minutes with complete focus on a single task
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                    <div>
+                      <strong>Short Break:</strong> Take a 5-minute break to recharge and reset
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                    <div>
+                      <strong>Long Break:</strong> After 4 sessions, take a 15-30 minute break
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                    <div>
+                      <strong>Repeat:</strong> Continue the cycle throughout your workday
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Benefits */}
+              <div>
+                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
+                  Benefits
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Improved focus and concentration
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Better time management
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Reduced mental fatigue
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Increased productivity
+                  </div>
+                </div>
+              </div>
+
+              {/* Sound notifications */}
+              <div>
+                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
+                  Sound Notifications
+                </h3>
+                <div className="text-sm text-[var(--fg-muted)] space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Gentle sine-wave beeps, short and pleasant
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Focus complete: 5 quick beeps
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Short break complete: 1 beep
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Long break complete: 3 quick beeps
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    Auto-stops; no endless ringing
+                  </div>
+                </div>
+              </div>
+
+              {/* Privacy & Free */}
+              <div>
+                <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
+                  Privacy & Free Forever
+                </h3>
+                <div className="text-sm text-[var(--fg-muted)] space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    <span>Free forever - no subscription, no payment required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    <span>No signup or account creation needed</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    <span>No data gathering or personal information collection</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                    <span>No selling of personal data - your privacy is protected</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Nvixio Branding */}
+              <div className="border-t border-[var(--border)] pt-4">
+                <p className="text-sm text-[var(--fg-muted)]">
+                  Brought to you by{" "}
+                  <a
+                    href="https://nvixio.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--fg-light)] hover:text-[var(--fg-accent)] transition-colors font-medium"
+                  >
+                    Nvixio
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
