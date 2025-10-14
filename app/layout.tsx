@@ -60,10 +60,10 @@ export const metadata: Metadata = {
     siteName: "DeepFocus",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://deepfocus.nvixio.com",
         width: 1200,
         height: 630,
-        alt: "Simpli Focus - Pomodoro Timer",
+        alt: "DeepFocus - Pomodoro Timer Interface",
       },
     ],
   },
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "DeepFocus - Pomodoro Timer",
     description:
       "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvixio. Focus, work, and achieve more.",
-    images: ["/og-image.png"],
+    images: ["https://deepfocus.nvixio.com"],
   },
     icons: {
       icon: "/favicon.svg",
