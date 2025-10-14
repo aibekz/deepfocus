@@ -1,6 +1,6 @@
 export type PomodoroMode = "focus" | "short" | "long";
 
-export interface PomodoroHistory {
+interface PomodoroHistory {
   focusDone: number;
 }
 
