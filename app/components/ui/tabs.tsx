@@ -89,6 +89,19 @@ const AnimatedTabs = React.forwardRef<
 
     // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(computeIndicator);
+
+    // Add resize listener to recalculate on screen size changes
+    const handleResize = () => {
+      requestAnimationFrame(computeIndicator);
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+    };
   }, [value, mounted]);
 
   return (
