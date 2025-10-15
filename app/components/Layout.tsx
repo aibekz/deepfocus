@@ -47,7 +47,6 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
     };
   }, [isRunning]);
 
-  // Close modal with ESC key
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -57,7 +56,6 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
 
     if (showInfo) {
       document.addEventListener("keydown", handleKeyDown);
-      // Prevent body scroll when modal is open
       document.body.style.overflow = "hidden";
     }
 
@@ -68,17 +66,14 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
   }, [showInfo]);
   return (
     <div className="h-screen bg-[var(--bg-dark)] text-[var(--fg-light)] font-sans flex flex-col">
-      {/* SEO Heading - Hidden but accessible to screen readers */}
       <h1 className="sr-only">DeepFocus - Pomodoro Timer</h1>
 
-      {/* Header */}
       <header className="relative">
         <div className="flex flex-row justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4">
           <div className="text-sm sm:text-base text-[var(--fg-muted)]">
             DeepFocus v1.0.0
           </div>
 
-          {/* Info Dialog */}
           <Dialog open={showInfo} onOpenChange={setShowInfo}>
             <DialogTrigger asChild>
               <button
@@ -102,7 +97,6 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                 </DialogDescription>
               </DialogHeader>
               <div className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0">
-                {/* App Info */}
                 <div>
                   <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
                     What is DeepFocus?
@@ -114,7 +108,6 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                   </p>
                 </div>
 
-                {/* Pomodoro Technique */}
                 <div>
                   <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
                     The Pomodoro Technique
@@ -184,7 +177,6 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                   </div>
                 </div>
 
-                {/* Sound notifications */}
                 <div>
                   <h3 className="text-lg font-semibold text-[var(--fg-accent)] mb-3">
                     Sound Notifications
@@ -233,15 +225,12 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
         </div>
       </header>
 
-      {/* Progress Bar - Independent from header */}
       <div className="w-full">
         <Progress value={Math.max(0, Math.min(100, (progress || 0) * 100))} />
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-0">{children}</div>
 
-      {/* Footer */}
       <footer>
         <div className="text-center text-xs text-[var(--fg-muted)] py-2">
           © 2025 DeepFocus from{" "}

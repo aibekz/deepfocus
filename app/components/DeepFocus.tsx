@@ -11,9 +11,6 @@ export function DeepFocus({
   shortMinutes = 5, // 5 minutes
   longMinutes = 15, // 15 minutes
 }: DeepFocusProps) {
-  // Use a local state for immediate mode display, sync with localStorage
-  const [localMode, setLocalMode] = React.useState<PomodoroMode>("focus");
-  
   const [store, setStore] = useLocalStorage<PomodoroStore>(
     "deepFocusPomodoro",
     React.useMemo(
@@ -28,13 +25,6 @@ export function DeepFocus({
     ),
   );
 
-  // Sync local mode with store mode, but keep local mode as fallback
-  React.useEffect(() => {
-    if (store.mode) {
-      setLocalMode(store.mode);
-    }
-  }, [store.mode]);
-
   const modeDurationMs: Record<PomodoroMode, number> = React.useMemo(
     () => ({
       focus: focusMinutes * 60 * 1000,
@@ -44,24 +34,20 @@ export function DeepFocus({
     [focusMinutes, shortMinutes, longMinutes],
   );
 
-  // Track whether we've mounted so the initial server render is deterministic
-  // (no Date.now() calls during render). Live time (using Date.now) is only
-  // computed after mount which prevents hydration mismatches.
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-
-  // Only tick while running and after we've mounted (client-side). The
-  // returned `tick` forces re-evaluation of Date.now()-based calculations
-  // (see `effectiveRemaining` below).
+  const stableMode = React.useMemo(() => {
+    if (!mounted) return "focus";
+    return store.mode || "focus";
+  }, [store.mode, mounted]);
   const tick = useNowTick(store.isRunning && mounted, 100);
 
-  // Reset timer on page refresh to avoid hydration issues
   React.useEffect(() => {
     if (mounted) {
       setStore((s) => ({
         ...s,
-        mode: "focus", // Always start with focus mode
+        mode: "focus",
         isRunning: false,
         targetAt: null,
         remainingMs: modeDurationMs.focus,
@@ -70,11 +56,9 @@ export function DeepFocus({
   }, [mounted, setStore, modeDurationMs]);
 
   const effectiveRemaining = React.useMemo(() => {
-    // Reference tick to satisfy linter and ensure recomputation on each tick
     void tick;
     if (store.isRunning && store.targetAt && mounted) {
       const remaining = Math.max(0, store.targetAt - Date.now());
-      // Ensure we never go below 0 or above the mode duration
       const maxDuration = modeDurationMs[store.mode];
       return Math.min(Math.max(0, remaining), maxDuration);
     }
@@ -104,18 +88,14 @@ export function DeepFocus({
       hist[todayKey].focusDone = (hist[todayKey].focusDone || 0) + 1;
     }
 
-    // After focus, do not auto-switch to break. Let user choose.
     if (store.mode === "focus") {
       next.mode = "focus";
       next.remainingMs = modeDurationMs.focus;
     } else {
-      // If break finishes, automatically switch to Deep Focus
       next.mode = "focus";
       next.remainingMs = modeDurationMs.focus;
     }
     next.history = hist;
-
-    // No auto cycle: do not start next session automatically
 
     setStore(next);
   }, [effectiveRemaining, store, setStore, modeDurationMs.focus]);
@@ -132,7 +112,6 @@ export function DeepFocus({
   function pause() {
     if (!store.isRunning) return;
     const left = Math.max(0, (store.targetAt || Date.now()) - Date.now());
-    // Ensure remaining time is valid
     const validRemaining = Math.max(
       0,
       Math.min(left, modeDurationMs[store.mode]),
@@ -178,20 +157,14 @@ export function DeepFocus({
   }, [mode, effectiveRemaining, isRunning]);
 
   const dur = modeDurationMs[store.mode];
-  
-  // Calculate progress - show correct value immediately
   const stableProgress = 1 - effectiveRemaining / dur;
 
   return (
     <Layout progress={stableProgress} isRunning={store.isRunning}>
       <div className="flex-1 flex flex-col">
-        {/* Main Timer Area */}
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
           <div className="w-full max-w-lg space-y-6">
-            {/* Toolbar - Mode Selection */}
-            <Toolbar mode={localMode} onModeChange={switchMode} />
-
-            {/* Timer Display Card */}
+            <Toolbar mode={stableMode} onModeChange={switchMode} />
             <div className="bg-transparent border border-[var(--border)] rounded-2xl p-8 sm:p-12">
               <div className="text-center">
                 <div className="text-6xl sm:text-7xl md:text-8xl font-bold tabular-nums text-[var(--fg-accent)] tracking-tight">
@@ -200,7 +173,6 @@ export function DeepFocus({
               </div>
             </div>
 
-            {/* Control Buttons */}
             {!store.isRunning ? (
               <Button
                 onClick={start}

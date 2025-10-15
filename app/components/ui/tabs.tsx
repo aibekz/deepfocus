@@ -52,7 +52,6 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-// Animated Tabs with Framer Motion - SSR Safe
 const AnimatedTabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
@@ -60,49 +59,23 @@ const AnimatedTabs = React.forwardRef<
   }
 >(({ children, value, onValueChange, ...props }, ref) => {
   const [mounted, setMounted] = React.useState(false);
-  const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties>({});
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Track if component is mounted to avoid SSR issues
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Calculate indicator position when value changes
-  React.useEffect(() => {
-    if (!mounted || !value) return;
-    
-    const computeIndicator = () => {
-      const activeElement = document.querySelector(
-        `[data-value="${value}"]`,
-      ) as HTMLElement | null;
-      const containerEl = containerRef.current;
-      if (!activeElement || !containerEl) return;
-      
-      const rect = activeElement.getBoundingClientRect();
-      const containerRect = containerEl.getBoundingClientRect();
-      setIndicatorStyle({
-        left: rect.left - containerRect.left,
-        width: rect.width,
-      });
-    };
+  const getIndicatorStyle = (val: string) => {
+    if (val === "focus") {
+      return { left: "4px", width: "calc(33.333% - 8px)" };
+    } else if (val === "short") {
+      return { left: "33.333%", width: "calc(33.333% - 8px)" };
+    } else if (val === "long") {
+      return { left: "66.666%", width: "calc(33.333% - 8px)" };
+    }
+    return { left: "4px", width: "calc(33.333% - 8px)" };
+  };
 
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(computeIndicator);
-
-    // Add resize listener to recalculate on screen size changes
-    const handleResize = () => {
-      requestAnimationFrame(computeIndicator);
-    };
-
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("orientationchange", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("orientationchange", handleResize);
-    };
-  }, [value, mounted]);
+  const indicatorStyle = getIndicatorStyle(value || "focus");
 
   return (
     <TabsPrimitive.Root
@@ -111,7 +84,7 @@ const AnimatedTabs = React.forwardRef<
       onValueChange={onValueChange}
       {...props}
     >
-      <div ref={containerRef} className="relative">
+      <div className="relative">
         {children}
         {value && mounted && (
           <motion.div
@@ -132,10 +105,7 @@ const AnimatedTabs = React.forwardRef<
         {value && !mounted && (
           <div
             className="absolute top-1 bottom-1 bg-[var(--purple-button)] rounded-md z-0"
-            style={{
-              left: value === "focus" ? "4px" : value === "short" ? "33.333%" : "66.666%",
-              width: "calc(33.333% - 8px)",
-            }}
+            style={indicatorStyle}
           />
         )}
       </div>
