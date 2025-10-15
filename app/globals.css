@@ -25,6 +25,7 @@
   --color-purple-button: var(--purple-button);
   --font-sans: var(--font-ibm-plex-sans);
   --font-mono: var(--font-ibm-plex-mono);
+  --font-space-grotesk: var(--font-space-grotesk);
 }
 
 body {
@@ -43,4 +44,9 @@ body {
 [data-pomodoro-timer] {
   min-height: 4rem;
   contain: layout;
+}
+
+/* SpaceGrotesk font for time display */
+.font-space-grotesk {
+  font-family: var(--font-space-grotesk), system-ui, -apple-system, sans-serif;
 }

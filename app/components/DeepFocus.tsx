@@ -168,7 +168,7 @@ export function DeepFocus({
             <Toolbar mode={stableMode} onModeChange={switchMode} />
             <div className="bg-transparent border border-[var(--border)] rounded-2xl p-8 sm:p-12">
               <div className="text-center">
-                <div className="text-6xl sm:text-7xl md:text-8xl font-bold tabular-nums text-[var(--fg-accent)] tracking-tight">
+                <div className="text-6xl sm:text-7xl md:text-8xl font-bold tabular-nums text-[var(--fg-accent)] tracking-tight font-space-grotesk">
                   {formatMMSS(effectiveRemaining)}
                 </div>
               </div>
