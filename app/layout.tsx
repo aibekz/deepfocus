@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://deepfocus.nvix.io"),
   title: "DeepFocus - Pomodoro Timer",
   description:
-    "DeepFocus is a modern Pomodoro timer from Nvixio - boost your productivity with focused work sessions and strategic breaks. Free, fast, and effective.",
+    "DeepFocus is a modern Pomodoro timer from Nvix I/O - boost your productivity with focused work sessions and strategic breaks. Free, fast, and effective.",
   keywords: [
     "pomodoro timer",
     "productivity timer",
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     "study timer",
     "concentration timer",
   ],
-  authors: [{ name: "Nvixio" }],
-  creator: "Nvixio",
-  publisher: "Nvixio",
+  authors: [{ name: "Nvix I/O" }],
+  creator: "Nvix I/O",
+  publisher: "Nvix I/O",
   robots: {
     index: true,
     follow: true,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     url: "https://deepfocus.nvix.io",
     title: "DeepFocus - Pomodoro Timer",
     description:
-      "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvixio. Focus, work, and achieve more with strategic time management.",
+      "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvix I/O. Focus, work, and achieve more with strategic time management.",
     siteName: "DeepFocus",
     images: [
       {
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DeepFocus - Pomodoro Timer",
     description:
-      "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvixio. Focus, work, and achieve more.",
+      "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvix I/O. Focus, work, and achieve more.",
     images: ["https://deepfocus.nvix.io/og-deepfocus.png"],
   },
     icons: {
@@ -91,7 +91,7 @@ export default function RootLayout({
     "@type": "WebApplication",
     name: "DeepFocus",
     description:
-      "A free Pomodoro timer application to boost productivity with focused work sessions and strategic breaks from Nvixio",
+      "A free Pomodoro timer application to boost productivity with focused work sessions and strategic breaks from Nvix I/O",
     url: "https://deepfocus.nvix.io",
     applicationCategory: "ProductivityApplication",
     operatingSystem: "Web Browser",
@@ -102,7 +102,7 @@ export default function RootLayout({
     },
     creator: {
       "@type": "Organization",
-      name: "Nvixio",
+      name: "Nvix I/O",
       url: "https://nvix.io",
     },
     featureList: [

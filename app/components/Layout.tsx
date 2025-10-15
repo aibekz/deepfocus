@@ -84,7 +84,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
             rel="noopener noreferrer"
             className="text-[var(--fg-light)] hover:opacity-80 transition-opacity"
           >
-            Nvixio
+            Nvix I/O
           </a>
         </div>
       </footer>
@@ -227,7 +227,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
               </div>
 
 
-              {/* Nvixio Branding */}
+              {/* Nvix I/O Branding */}
               <div className="border-t border-[var(--border)] pt-4">
                 <p className="text-sm text-[var(--fg-muted)]">
                   Brought to you by{" "}
@@ -237,7 +237,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
                     rel="noopener noreferrer"
                     className="text-[var(--fg-light)] hover:text-[var(--fg-accent)] transition-colors font-medium"
                   >
-                    Nvixio
+                    Nvix I/O
                   </a>
                 </p>
               </div>
