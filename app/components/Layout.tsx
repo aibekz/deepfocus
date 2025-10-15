@@ -15,10 +15,37 @@ import { Progress } from "@/app/components/ui/progress";
 interface LayoutProps {
   children: React.ReactNode;
   progress?: number; // Progress percentage (0-1)
+  isRunning?: boolean; // Whether timer is currently running
 }
 
-export default function Layout({ children, progress = 0 }: LayoutProps) {
+export default function Layout({ children, progress = 0, isRunning = false }: LayoutProps) {
   const [showInfo, setShowInfo] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isRunning) {
+        e.preventDefault();
+        e.returnValue = "Timer is running. Changes you made may not be saved. Are you sure you want to leave?";
+        return "Timer is running. Changes you made may not be saved. Are you sure you want to leave?";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    
+    const handlePageHide = (e: PageTransitionEvent) => {
+      if (isRunning) {
+        e.preventDefault();
+        return "Timer is running. Changes you made may not be saved. Are you sure you want to leave?";
+      }
+    };
+    
+    window.addEventListener("pagehide", handlePageHide);
+    
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [isRunning]);
 
   // Close modal with ESC key
   useEffect(() => {
@@ -44,7 +71,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
       {/* SEO Heading - Hidden but accessible to screen readers */}
       <h1 className="sr-only">DeepFocus - Pomodoro Timer</h1>
 
-      {/* Header with Progress Bar */}
+      {/* Header */}
       <header className="relative">
         <div className="flex flex-row justify-between items-center p-3 sm:p-4 gap-2 sm:gap-4">
           <div className="text-sm sm:text-base text-[var(--fg-muted)]">
@@ -204,11 +231,12 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
             </DialogContent>
           </Dialog>
         </div>
-        {/* Progress Bar */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <Progress value={Math.max(0, Math.min(100, progress * 100))} />
-        </div>
       </header>
+
+      {/* Progress Bar - Independent from header */}
+      <div className="w-full">
+        <Progress value={Math.max(0, Math.min(100, (progress || 0) * 100))} />
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-0">{children}</div>

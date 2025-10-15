@@ -11,6 +11,9 @@ export function DeepFocus({
   shortMinutes = 5, // 5 minutes
   longMinutes = 15, // 15 minutes
 }: DeepFocusProps) {
+  // Use a local state for immediate mode display, sync with localStorage
+  const [localMode, setLocalMode] = React.useState<PomodoroMode>("focus");
+  
   const [store, setStore] = useLocalStorage<PomodoroStore>(
     "deepFocusPomodoro",
     React.useMemo(
@@ -24,6 +27,13 @@ export function DeepFocus({
       [focusMinutes],
     ),
   );
+
+  // Sync local mode with store mode, but keep local mode as fallback
+  React.useEffect(() => {
+    if (store.mode) {
+      setLocalMode(store.mode);
+    }
+  }, [store.mode]);
 
   const modeDurationMs: Record<PomodoroMode, number> = React.useMemo(
     () => ({
@@ -40,26 +50,24 @@ export function DeepFocus({
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-  // Track whether localStorage has been loaded to prevent mode flashing
-  const [localStorageLoaded, setLocalStorageLoaded] = React.useState(false);
-  React.useEffect(() => {
-    // Check if we have saved data in localStorage
-    try {
-      const saved = window.localStorage.getItem("deepFocusPomodoro");
-      if (saved) {
-        setLocalStorageLoaded(true);
-      } else {
-        setLocalStorageLoaded(true); // No saved data, we're ready
-      }
-    } catch {
-      setLocalStorageLoaded(true);
-    }
-  }, []);
 
   // Only tick while running and after we've mounted (client-side). The
   // returned `tick` forces re-evaluation of Date.now()-based calculations
   // (see `effectiveRemaining` below).
   const tick = useNowTick(store.isRunning && mounted, 100);
+
+  // Reset timer on page refresh to avoid hydration issues
+  React.useEffect(() => {
+    if (mounted) {
+      setStore((s) => ({
+        ...s,
+        mode: "focus", // Always start with focus mode
+        isRunning: false,
+        targetAt: null,
+        remainingMs: modeDurationMs.focus,
+      }));
+    }
+  }, [mounted, setStore, modeDurationMs]);
 
   const effectiveRemaining = React.useMemo(() => {
     // Reference tick to satisfy linter and ensure recomputation on each tick
@@ -170,18 +178,18 @@ export function DeepFocus({
   }, [mode, effectiveRemaining, isRunning]);
 
   const dur = modeDurationMs[store.mode];
-  const pct = 1 - effectiveRemaining / dur;
+  
+  // Calculate progress - show correct value immediately
+  const stableProgress = 1 - effectiveRemaining / dur;
 
   return (
-    <Layout progress={pct}>
+    <Layout progress={stableProgress} isRunning={store.isRunning}>
       <div className="flex-1 flex flex-col">
         {/* Main Timer Area */}
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
           <div className="w-full max-w-lg space-y-6">
             {/* Toolbar - Mode Selection */}
-            {localStorageLoaded && (
-              <Toolbar mode={store.mode} onModeChange={switchMode} />
-            )}
+            <Toolbar mode={localMode} onModeChange={switchMode} />
 
             {/* Timer Display Card */}
             <div className="bg-transparent border border-[var(--border)] rounded-2xl p-8 sm:p-12">

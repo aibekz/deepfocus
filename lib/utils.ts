@@ -52,6 +52,12 @@ export function useLocalStorage<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
+  // Prevent hydration mismatches by ensuring consistent initial state
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   // Persist state changes to localStorage only after initial load.
   useEffect(() => {
     if (!isLoaded) return;

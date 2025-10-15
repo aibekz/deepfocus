@@ -52,98 +52,28 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-// Animated Tabs with Framer Motion
+// Simple Tabs without motion for immediate rendering
 const AnimatedTabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
     children: React.ReactNode;
   }
 >(({ children, value, onValueChange, ...props }, ref) => {
-  const [activeTab, setActiveTab] = React.useState<string>(value || "");
-  const [indicatorStyle, setIndicatorStyle] =
-    React.useState<React.CSSProperties>({});
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const handleValueChange = (newValue: string) => {
-    setActiveTab(newValue);
-    onValueChange?.(newValue);
-  };
-
-  React.useEffect(() => {
-    if (value !== undefined) {
-      setActiveTab(value);
-    }
-  }, [value]);
-
-  React.useEffect(() => {
-    const computeIndicator = () => {
-      if (!activeTab) return;
-      const activeElement = document.querySelector(
-        `[data-value="${activeTab}"]`,
-      ) as HTMLElement | null;
-      const containerEl =
-        containerRef.current ?? activeElement?.parentElement ?? null;
-      if (!activeElement || !containerEl) return;
-      const rect = activeElement.getBoundingClientRect();
-      const containerRect = containerEl.getBoundingClientRect();
-      setIndicatorStyle({
-        left: rect.left - containerRect.left,
-        width: rect.width,
-      });
-    };
-
-    // Initial compute on mount/value change
-    computeIndicator();
-
-    // Recompute on resize/orientation change
-    if (typeof window !== "undefined") {
-      const onResize = () => {
-        // use rAF to wait for layout to settle (fonts/responsive text)
-        requestAnimationFrame(computeIndicator);
-      };
-      window.addEventListener("resize", onResize);
-      window.addEventListener("orientationchange", onResize);
-
-      // Observe container size changes
-      const ro = new ResizeObserver(() => onResize());
-      if (containerRef.current) ro.observe(containerRef.current);
-
-      // Also observe active element (text size may change across breakpoints)
-      const activeElement = document.querySelector(
-        `[data-value="${activeTab}"]`,
-      ) as HTMLElement | null;
-      if (activeElement) ro.observe(activeElement);
-
-      return () => {
-        window.removeEventListener("resize", onResize);
-        window.removeEventListener("orientationchange", onResize);
-        ro.disconnect();
-      };
-    }
-  }, [activeTab]);
-
   return (
     <TabsPrimitive.Root
       ref={ref}
-      value={activeTab}
-      onValueChange={handleValueChange}
+      value={value}
+      onValueChange={onValueChange}
       {...props}
     >
-      <div ref={containerRef} className="relative">
+      <div className="relative">
         {children}
-        {activeTab && (
-          <motion.div
+        {value && (
+          <div
             className="absolute top-1 bottom-1 bg-[var(--purple-button)] rounded-md z-0"
-            style={indicatorStyle}
-            initial={false}
-            animate={{
-              left: indicatorStyle.left,
-              width: indicatorStyle.width,
-            }}
-            transition={{
-              type: "tween",
-              duration: 0.3,
-              ease: "easeInOut",
+            style={{
+              left: value === "focus" ? "4px" : value === "short" ? "33.333%" : "66.666%",
+              width: "calc(33.333% - 8px)",
             }}
           />
         )}

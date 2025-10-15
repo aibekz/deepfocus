@@ -11,7 +11,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
     <div
       ref={ref}
       className={cn(
-        "relative h-1 w-full overflow-hidden rounded bg-[var(--bg-card)]",
+        "relative h-2 w-full overflow-hidden rounded bg-[var(--bg-card)]",
         className,
       )}
       role="progressbar"
@@ -21,7 +21,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       {...props}
     >
       <motion.div
-        className="h-full w-full flex-1 bg-[var(--fg-accent)]"
+        className="h-full w-full flex-1 bg-[var(--purple-button)]"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: Math.max(0, Math.min(1, value / 100)) }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
