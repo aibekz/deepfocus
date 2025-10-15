@@ -121,7 +121,7 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                   </h3>
                   <div className="text-sm text-[var(--fg-muted)] space-y-3">
                     <div className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">
+                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--purple-button)] text-white rounded-full flex items-center justify-center text-xs font-bold">
                         1
                       </span>
                       <div>
@@ -130,7 +130,7 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">
+                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--purple-button)] text-white rounded-full flex items-center justify-center text-xs font-bold">
                         2
                       </span>
                       <div>
@@ -139,7 +139,7 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">
+                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--purple-button)] text-white rounded-full flex items-center justify-center text-xs font-bold">
                         3
                       </span>
                       <div>
@@ -148,7 +148,7 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--fg-accent)] text-[var(--bg-dark)] rounded-full flex items-center justify-center text-xs font-bold">
+                      <span className="flex-shrink-0 w-6 h-6 bg-[var(--purple-button)] text-white rounded-full flex items-center justify-center text-xs font-bold">
                         4
                       </span>
                       <div>
@@ -166,19 +166,19 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Improved focus and concentration
                     </div>
                     <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Better time management
                     </div>
                     <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Reduced mental fatigue
                     </div>
                     <div className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Increased productivity
                     </div>
                   </div>
@@ -191,23 +191,23 @@ export default function Layout({ children, progress = 0, isRunning = false }: La
                   </h3>
                   <div className="text-sm text-[var(--fg-muted)] space-y-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Gentle sine-wave beeps, short and pleasant
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Focus complete: 5 quick beeps
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Short break complete: 1 beep
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Long break complete: 3 quick beeps
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[var(--fg-accent)] rounded-full"></div>
+                      <div className="w-2 h-2 bg-[var(--purple-button)] rounded-full"></div>
                       Auto-stops; no endless ringing
                     </div>
                   </div>

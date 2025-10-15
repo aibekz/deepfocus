@@ -52,13 +52,45 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-// Simple Tabs without motion for immediate rendering
+// Animated Tabs with Framer Motion - SSR Safe
 const AnimatedTabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
     children: React.ReactNode;
   }
 >(({ children, value, onValueChange, ...props }, ref) => {
+  const [mounted, setMounted] = React.useState(false);
+  const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties>({});
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Track if component is mounted to avoid SSR issues
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Calculate indicator position when value changes
+  React.useEffect(() => {
+    if (!mounted || !value) return;
+    
+    const computeIndicator = () => {
+      const activeElement = document.querySelector(
+        `[data-value="${value}"]`,
+      ) as HTMLElement | null;
+      const containerEl = containerRef.current;
+      if (!activeElement || !containerEl) return;
+      
+      const rect = activeElement.getBoundingClientRect();
+      const containerRect = containerEl.getBoundingClientRect();
+      setIndicatorStyle({
+        left: rect.left - containerRect.left,
+        width: rect.width,
+      });
+    };
+
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(computeIndicator);
+  }, [value, mounted]);
+
   return (
     <TabsPrimitive.Root
       ref={ref}
@@ -66,9 +98,25 @@ const AnimatedTabs = React.forwardRef<
       onValueChange={onValueChange}
       {...props}
     >
-      <div className="relative">
+      <div ref={containerRef} className="relative">
         {children}
-        {value && (
+        {value && mounted && (
+          <motion.div
+            className="absolute top-1 bottom-1 bg-[var(--purple-button)] rounded-md z-0"
+            style={indicatorStyle}
+            initial={false}
+            animate={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
+            }}
+            transition={{
+              type: "tween",
+              duration: 0.3,
+              ease: "easeInOut",
+            }}
+          />
+        )}
+        {value && !mounted && (
           <div
             className="absolute top-1 bottom-1 bg-[var(--purple-button)] rounded-md z-0"
             style={{
