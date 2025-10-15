@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import type { PomodoroMode, PomodoroStore, DeepFocusProps } from "@/data/types";
+import { Button } from "@/app/components/ui/button";
+import type { DeepFocusProps, PomodoroMode, PomodoroStore } from "@/data/types";
 import { beep, formatMMSS, useLocalStorage, useNowTick } from "@/lib/utils";
 import Layout from "./Layout";
 import Toolbar from "./ui/Toolbar";
@@ -10,17 +11,18 @@ export function DeepFocus({
   shortMinutes = 5, // 5 minutes
   longMinutes = 15, // 15 minutes
 }: DeepFocusProps) {
-  const todayKey = new Date().toISOString().slice(0, 10);
-
   const [store, setStore] = useLocalStorage<PomodoroStore>(
     "deepFocusPomodoro",
-    {
-      mode: "focus",
-      isRunning: false,
-      targetAt: null,
-      remainingMs: focusMinutes * 60 * 1000,
-      history: { [todayKey]: { focusDone: 0 } },
-    },
+    React.useMemo(
+      () => ({
+        mode: "focus",
+        isRunning: false,
+        targetAt: null,
+        remainingMs: focusMinutes * 60 * 1000,
+        history: {},
+      }),
+      [focusMinutes],
+    ),
   );
 
   const modeDurationMs: Record<PomodoroMode, number> = React.useMemo(
@@ -37,6 +39,22 @@ export function DeepFocus({
   // computed after mount which prevents hydration mismatches.
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
+
+  // Track whether localStorage has been loaded to prevent mode flashing
+  const [localStorageLoaded, setLocalStorageLoaded] = React.useState(false);
+  React.useEffect(() => {
+    // Check if we have saved data in localStorage
+    try {
+      const saved = window.localStorage.getItem("deepFocusPomodoro");
+      if (saved) {
+        setLocalStorageLoaded(true);
+      } else {
+        setLocalStorageLoaded(true); // No saved data, we're ready
+      }
+    } catch {
+      setLocalStorageLoaded(true);
+    }
+  }, []);
 
   // Only tick while running and after we've mounted (client-side). The
   // returned `tick` forces re-evaluation of Date.now()-based calculations
@@ -70,12 +88,12 @@ export function DeepFocus({
     beep(store.mode);
     const next = { ...store, isRunning: false, targetAt: null, remainingMs: 0 };
 
-    const key = new Date().toISOString().slice(0, 10);
+    const todayKey = new Date().toISOString().slice(0, 10);
     const hist = { ...(next.history || {}) };
-    if (!hist[key]) hist[key] = { focusDone: 0 };
+    if (!hist[todayKey]) hist[todayKey] = { focusDone: 0 };
 
     if (store.mode === "focus") {
-      hist[key].focusDone = (hist[key].focusDone || 0) + 1;
+      hist[todayKey].focusDone = (hist[todayKey].focusDone || 0) + 1;
     }
 
     // After focus, do not auto-switch to break. Let user choose.
@@ -161,10 +179,12 @@ export function DeepFocus({
         <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
           <div className="w-full max-w-lg space-y-6">
             {/* Toolbar - Mode Selection */}
-            <Toolbar mode={store.mode} onModeChange={switchMode} />
+            {localStorageLoaded && (
+              <Toolbar mode={store.mode} onModeChange={switchMode} />
+            )}
 
             {/* Timer Display Card */}
-            <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-8 sm:p-12 shadow-lg">
+            <div className="bg-transparent border border-[var(--border)] rounded-2xl p-8 sm:p-12">
               <div className="text-center">
                 <div className="text-6xl sm:text-7xl md:text-8xl font-bold tabular-nums text-[var(--fg-accent)] tracking-tight">
                   {formatMMSS(effectiveRemaining)}
@@ -174,21 +194,21 @@ export function DeepFocus({
 
             {/* Control Buttons */}
             {!store.isRunning ? (
-              <button
-                type="button"
+              <Button
                 onClick={start}
-                className="w-full px-4 py-3 sm:px-8 sm:py-4 rounded-xl bg-[var(--fg-accent)] text-[var(--bg-dark)] font-semibold text-base sm:text-lg hover:opacity-90 active:opacity-80 transition-all shadow-lg uppercase"
+                className="w-full text-base sm:text-lg uppercase shadow-lg"
+                size="lg"
               >
                 Start
-              </button>
+              </Button>
             ) : (
-              <button
-                type="button"
+              <Button
                 onClick={pause}
-                className="w-full px-4 py-3 sm:px-8 sm:py-4 rounded-xl bg-[var(--fg-accent)] text-[var(--bg-dark)] font-semibold text-base sm:text-lg hover:opacity-90 active:opacity-80 transition-all shadow-lg uppercase"
+                className="w-full text-base sm:text-lg uppercase shadow-lg"
+                size="lg"
               >
                 Pause
-              </button>
+              </Button>
             )}
           </div>
         </div>

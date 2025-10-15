@@ -1,3 +1,7 @@
+import { type ClassValue, clsx } from "clsx";
+import { useEffect, useReducer, useState } from "react";
+import { twMerge } from "tailwind-merge";
+
 export function formatMMSS(totalMs: number): string {
   const totalSec = Math.max(0, Math.round(totalMs / 1000));
   const mm = Math.floor(totalSec / 60)
@@ -7,7 +11,9 @@ export function formatMMSS(totalMs: number): string {
   return `${mm}:${ss}`;
 }
 
-import { useEffect, useReducer, useState } from "react";
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function useNowTick(enabled: boolean, stepMs: number = 100): number {
   // Return a numeric tick that increments on the given interval. Components
@@ -31,22 +37,28 @@ export function useLocalStorage<T>(
   // Read persisted value from localStorage only after mount to avoid
   // SSR/client hydration mismatches.
   const [state, setState] = useState<T>(initial);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // On mount, load any saved value and replace the initial state.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(key);
-      if (raw) setState(JSON.parse(raw));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setState(parsed);
+      }
     } catch {}
+    setIsLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  // Persist state changes to localStorage.
+  // Persist state changes to localStorage only after initial load.
   useEffect(() => {
+    if (!isLoaded) return;
     try {
       window.localStorage.setItem(key, JSON.stringify(state));
     } catch {}
-  }, [key, state]);
+  }, [key, state, isLoaded]);
 
   return [state, setState];
 }

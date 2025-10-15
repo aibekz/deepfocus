@@ -74,10 +74,10 @@ export const metadata: Metadata = {
       "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvix I/O. Focus, work, and achieve more.",
     images: ["https://deepfocus.nvix.io/og-deepfocus.png"],
   },
-    icons: {
-      icon: "/favicon.svg",
-      apple: "/apple-touch-icon.png",
-    },
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
+  },
   category: "productivity",
 };
 
