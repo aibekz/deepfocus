@@ -12,23 +12,39 @@ interface ToolbarProps {
 }
 
 function Toolbar({ mode, onModeChange }: ToolbarProps) {
+  const handleTriggerClick = (value: string) => {
+    // Always call onModeChange, even if it's the same value
+    onModeChange(value as ToolbarProps["mode"]);
+  };
+
   return (
     <AnimatedTabs
       value={mode}
       onValueChange={(v) => onModeChange(v as ToolbarProps["mode"])}
     >
       <TabsList>
-        <TabsTrigger value="focus" data-value="focus">
+        <TabsTrigger 
+          value="focus" 
+          data-value="focus"
+          onClick={() => handleTriggerClick("focus")}
+        >
           Deep Focus
         </TabsTrigger>
-        <TabsTrigger value="short" data-value="short">
+        <TabsTrigger 
+          value="short" 
+          data-value="short"
+          onClick={() => handleTriggerClick("short")}
+        >
           Short Break
         </TabsTrigger>
-        <TabsTrigger value="long" data-value="long">
+        <TabsTrigger 
+          value="long" 
+          data-value="long"
+          onClick={() => handleTriggerClick("long")}
+        >
           Long Break
         </TabsTrigger>
       </TabsList>
-      {/* content panes are not used; just triggers as toolbar */}
       <TabsContent value="focus" />
       <TabsContent value="short" />
       <TabsContent value="long" />

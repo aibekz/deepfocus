@@ -133,13 +133,14 @@ export function DeepFocus({
     }));
   }
   function switchMode(mode: PomodoroMode) {
-    if (mode === store.mode) {
-      if (store.isRunning) {
-        reset(mode);
-      }
-      return;
-    }
-    reset(mode);
+    // Always reset when switching modes, even if it's the same mode
+    setStore((s) => ({
+      ...s,
+      isRunning: false,
+      targetAt: null,
+      remainingMs: modeDurationMs[mode],
+      mode,
+    }));
   }
 
   const { mode, isRunning } = store;
