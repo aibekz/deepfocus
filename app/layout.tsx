@@ -18,7 +18,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://deepfocus.nvixio.com"),
+  metadataBase: new URL("https://deepfocus.nvix.io"),
   title: "DeepFocus - Pomodoro Timer",
   description:
     "DeepFocus is a modern Pomodoro timer from Nvixio - boost your productivity with focused work sessions and strategic breaks. Free, fast, and effective.",
@@ -53,14 +53,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://deepfocus.nvixio.com",
+    url: "https://deepfocus.nvix.io",
     title: "DeepFocus - Pomodoro Timer",
     description:
       "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvixio. Focus, work, and achieve more with strategic time management.",
     siteName: "DeepFocus",
     images: [
       {
-        url: "https://deepfocus.nvixio.com/og-deepfocus.png",
+        url: "https://deepfocus.nvix.io/og-deepfocus.png",
         width: 1200,
         height: 630,
         alt: "DeepFocus - Pomodoro Timer Interface",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "DeepFocus - Pomodoro Timer",
     description:
       "Boost your productivity with DeepFocus - a modern Pomodoro timer from Nvixio. Focus, work, and achieve more.",
-    images: ["https://deepfocus.nvixio.com/og-deepfocus.png"],
+    images: ["https://deepfocus.nvix.io/og-deepfocus.png"],
   },
     icons: {
       icon: "/favicon.svg",
@@ -92,7 +92,7 @@ export default function RootLayout({
     name: "DeepFocus",
     description:
       "A free Pomodoro timer application to boost productivity with focused work sessions and strategic breaks from Nvixio",
-    url: "https://deepfocus.nvixio.com",
+    url: "https://deepfocus.nvix.io",
     applicationCategory: "ProductivityApplication",
     operatingSystem: "Web Browser",
     offers: {
@@ -103,7 +103,7 @@ export default function RootLayout({
     creator: {
       "@type": "Organization",
       name: "Nvixio",
-      url: "https://nvixio.com",
+      url: "https://nvix.io",
     },
     featureList: [
       "Pomodoro timer",

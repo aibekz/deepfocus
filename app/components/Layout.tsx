@@ -79,7 +79,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
         <div className="text-center text-xs text-[var(--fg-muted)] py-2">
           © 2025 DeepFocus from{" "}
           <a
-            href="https://nvixio.com"
+            href="https://nvix.io"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--fg-light)] hover:opacity-80 transition-opacity"
@@ -232,7 +232,7 @@ export default function Layout({ children, progress = 0 }: LayoutProps) {
                 <p className="text-sm text-[var(--fg-muted)]">
                   Brought to you by{" "}
                   <a
-                    href="https://nvixio.com"
+                    href="https://nvix.io"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[var(--fg-light)] hover:text-[var(--fg-accent)] transition-colors font-medium"
